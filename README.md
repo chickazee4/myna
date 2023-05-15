@@ -1,4 +1,4 @@
-![myna logo](https://github.com/chickazee4/myna/blob/main/gfx/myna.svg?raw=true)
+![myna logo](https://raw.githubusercontent.com/chickazee4/myna/main/gfx/logo_master.svg)
 
 myna is a free and open source C++ and wxWidgets-based alternative to the [Starling/Star32 software](https://starlingdb.org/downl.php?lan=en#soft) for viewing Sergei Starostin's (and others') [etymological databases](https://starling.rinet.ru/downl.php), providing a lightweight (i.e., very rudimentary), Unix-compatible graphical interface for browsing them as well as functionality for exporting them as .csv format spreadsheets.
 
