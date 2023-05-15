@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0077 NEW)
-project(myna)
+project(myna VERSION 0.1)
 
 option(REMOTE_LIBSTARLING "Obtain remote libstarling and statically link instead of using local shared library" OFF)
 
