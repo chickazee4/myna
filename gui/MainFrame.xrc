@@ -6,6 +6,7 @@
 		<object class="wxGrid" name="ID_GRID1" variable="DbfGridView" member="yes">
 			<pos>168,176</pos>
 			<style>wxVSCROLL|wxHSCROLL</style>
+			<handler function="OnDbfGridViewChanged" entry="EVT_GRID_CELL_CHANGED" />
 		</object>
 		<object class="wxFileDialog" variable="ImportDialog" member="yes">
 			<message>Select database</message>

@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 
 #include <wx/msgdlg.h>
 #include <wx/intl.h>
@@ -53,7 +54,16 @@ MetadataDialog::MetadataDialog(wxWindow *parent, wxWindowID id, Starling_db *dbp
     dbp = dbpo;
     // set up basic elements
     wxFlexGridSizer *GridSizer1;
-    Create(parent, wxID_ANY, _("Database metadata"), wxDefaultPosition, wxDefaultSize, wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("myna - database metadata"), wxDefaultPosition, wxDefaultSize, wxCAPTION|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX, _T("wxID_ANY"));
+    #if defined(unix) || defined(__unix__) || defined(__unix) || defined(__linux__)
+    // unix macro is not defined on macOS, which is actually the desired behavior here
+    wxIcon FrameIcon;
+    if(std::filesystem::exists(std::filesystem::path(APPLICATION_DATA) / std::filesystem::path("myna/icon.png"))){
+        auto bmp = new wxBitmap((std::filesystem::path(APPLICATION_DATA) / std::filesystem::path("myna/icon.png")).string(), wxBITMAP_TYPE_PNG);
+        FrameIcon.CopyFromBitmap(*bmp);
+        SetIcon(FrameIcon);
+    }
+    #endif
     GridSizer1 = new wxFlexGridSizer(5, 2, 0, 0);
     StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Date last modified:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
     GridSizer1->Add(StaticText1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -77,15 +87,15 @@ MetadataDialog::MetadataDialog(wxWindow *parent, wxWindowID id, Starling_db *dbp
     FieldsGrid->CreateGrid(0,3);
     FieldsGrid->EnableEditing(false);
     FieldsGrid->EnableGridLines(true);
+    FieldsGridTable = new wxGridStringTable();
+    FieldsGrid->SetTable(FieldsGridTable);
+    FieldsGridTable->InsertCols(0, 3);
     FieldsGrid->SetColLabelValue(0, _("Internal name"));
     FieldsGrid->SetColLabelValue(1, _("Human name"));
     FieldsGrid->SetColLabelValue(2, _("Data type"));
     FieldsGrid->HideRowLabels();
     FieldsGrid->SetDefaultCellFont( FieldsGrid->GetFont() );
     FieldsGrid->SetDefaultCellTextColour( FieldsGrid->GetForegroundColour() );
-    FieldsGridTable = new wxGridStringTable();
-    FieldsGrid->SetTable(FieldsGridTable);
-    FieldsGridTable->InsertCols(0, 3);
     GridSizer1->Add(FieldsGrid, 1, wxALL|wxEXPAND, 5);
     SetSizer(GridSizer1);
     GridSizer1->Fit(this);

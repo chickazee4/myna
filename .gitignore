@@ -1,0 +1,7 @@
+*.layout
+*.depend
+*.var
+*.dbf
+*.cbp
+*~
+build

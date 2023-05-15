@@ -37,7 +37,7 @@ Since myna's interface is currently so basic, most aspects should be fairly self
 * File
   - Import .dbf — Will display a file chooser dialog with which you can choose a database to load. .var and .inf files will be automatically detected. If no .var file exists, a warning will be shown to indicate that this may cause crashes if the database expects a .var. No message will be displayed if there is no .inf file, since it is not required to display or export a database.
   - Export .csv — Will display a file chooser dialog with which you can choose a location to save a .csv file corresponding to the database. When saved, the contents of the table view **as shown** (changes made to the view since loading will be reflected!) will be saved to a **comma-delimited** UTF-8 .csv file.
-  - Quit — Quit the program. No prompt will be shown to protect data!
+  - Quit — Quit the program. If the data has been modified, a prompt will be shown to confirm close.
 * Edit
   - Delete row — Deletes a selected row. You need to click on the row number to select the whole row in order to delete it due to certain limitations of wxWidgets (you can't select just a single cell).
   - Delete column — Same, but for a column.
@@ -55,7 +55,6 @@ Since myna's interface is currently so basic, most aspects should be fairly self
 * Fix: Random bus errors occur about a quarter the time when opening a database. Seems to originate from a threading issue? Traceback indicates it results from libstarling, but nothing similar ever happens in starling2csv.
 * Undo/redo
 * Sort data by column
-* Keyboard shortcuts
 * Successful macOS compile + run
 * Change output csv delimiter (not just commas)
 * Status bar

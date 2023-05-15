@@ -13,7 +13,6 @@
 #include <starling/starling.h>
 #include "MainFrame.h"
 #include "MetadataDialog.h"
-#include "Icon.h"
 
 const long MainFrame::ID_GRID1 = wxNewId();
 const long MainFrame::ImportDbfMBtnId = wxNewId();
@@ -28,6 +27,8 @@ const long MainFrame::ShowIndicesMBtnId = wxNewId();
 const long MainFrame::ShowDbMetadataMBtnId = wxNewId();
 const long MainFrame::HumanNamesMBtnId = wxNewId();
 
+bool IsContentChanged = false;
+
 BEGIN_EVENT_TABLE(MainFrame,wxFrame)
 	//event table
 END_EVENT_TABLE()
@@ -35,11 +36,15 @@ END_EVENT_TABLE()
 MainFrame::MainFrame(wxWindow *parent,wxWindowID id)
 {
 	Create(parent, id, _("myna"), wxDefaultPosition, wxDefaultSize, wxCAPTION|wxDEFAULT_FRAME_STYLE|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxFRAME_SHAPED|wxMAXIMIZE_BOX|wxMINIMIZE_BOX, _T("id"));
-	{
-		wxIcon FrameIcon;
-        FrameIcon.CopyFromBitmap(wxBitmap::NewFromPNGData(program_icon, program_icon_size));
-		SetIcon(FrameIcon);
-	}
+    #if defined(unix) || defined(__unix__) || defined(__unix) || defined(__linux__)
+    // unix macro is not defined on macOS, which is actually the desired behavior
+    wxIcon FrameIcon;
+    if(std::filesystem::exists(std::filesystem::path(APPLICATION_DATA) / std::filesystem::path("myna/icon.png"))){
+        auto bmp = new wxBitmap((std::filesystem::path(APPLICATION_DATA) / std::filesystem::path("myna/icon.png")).string(), wxBITMAP_TYPE_PNG);
+        FrameIcon.CopyFromBitmap(*bmp);
+        SetIcon(FrameIcon);
+    }
+    #endif
 	DbfGridView = new wxGrid(this, ID_GRID1, wxPoint(168,176), wxDefaultSize, wxVSCROLL|wxHSCROLL, _T("ID_GRID1"));
 	DbfGridViewTable = new wxGridStringTable();
 	DbfGridView->SetTable(DbfGridViewTable);
@@ -80,6 +85,8 @@ MainFrame::MainFrame(wxWindow *parent,wxWindowID id)
 	MainMenuBar->Append(Menu3, _("View"));
 	SetMenuBar(MainMenuBar);
 
+	Connect(id, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&MainFrame::OnCloseWindow);
+	Connect(ID_GRID1,wxEVT_GRID_CELL_CHANGED,(wxObjectEventFunction)&MainFrame::OnDbfGridViewChanged);
 	Connect(ImportDbfMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnImportDbfMBtnSelected);
     Connect(ExportCsvMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnExportCsvMBtnSelected);
     Connect(QuitMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnQuitMBtnSelected);
@@ -90,12 +97,45 @@ MainFrame::MainFrame(wxWindow *parent,wxWindowID id)
     Connect(HumanNamesMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnHumanNamesMBtnSelected);
     Connect(ShowDbMetadataMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnShowDbMetadataMBtnSelected);
 
+    // accelerators
+    wxAcceleratorEntry accels[4];
+    #ifdef __APPLE__
+    #define ACCELCTRL wxACCEL_CMD
+    #else
+    #define ACCELCTRL wxACCEL_CTRL
+    #endif
+    accels[0].Set(ACCELCTRL, (int)'O', ImportDbfMBtnId);
+    accels[1].Set(ACCELCTRL, (int)'S', ExportCsvMBtnId);
+    accels[2].Set(ACCELCTRL, (int)'Q', QuitMBtnId);
+    accels[3].Set(ACCELCTRL, (int)'H', ShowDbMetadataMBtnId);
+    wxAcceleratorTable AccelTable(4, accels);
+    this->SetAcceleratorTable(AccelTable);
+
 	MainMenuBar->Show(true);
 }
 
 MainFrame::~MainFrame()
 {
-//destroy
+    //destroy
+}
+
+void
+MainFrame::OnCloseWindow(wxCloseEvent &event)
+{
+    if(IsContentChanged && wxMessageBox(_("Contents have been changed! Quit anyway?"), _("Warning"), wxICON_QUESTION | wxYES_NO, this) == wxNO){
+            event.Veto();
+            return;
+    }
+    Destroy();
+}
+
+void
+MainFrame::OnDbfGridViewChanged(wxCommandEvent &event)
+{
+    if(!IsContentChanged){
+        this->SetTitle(this->GetTitle() + "*");
+        IsContentChanged = true;
+    }
 }
 
 void
@@ -126,6 +166,7 @@ MainFrame::OnImportDbfMBtnSelected(wxCommandEvent &event)
         if(result != (STARLING_OK & STARLING_OK))
             return; // parse error
         else {
+            this->SetTitle("myna - " + DbfPath);
             starling_decode_all(dbp);
             PopulateTableView();
         }
@@ -167,12 +208,17 @@ MainFrame::OnExportCsvMBtnSelected(wxCommandEvent &event)
             csv << "\n";
         }
         csv.close();
+        IsContentChanged = false;
+        if(this->GetTitle().Last() == '*')
+           this->SetTitle(this->GetTitle().Before('*'));
     }
 }
 
 void
 MainFrame::OnQuitMBtnSelected(wxCommandEvent &event)
 {
+    if(IsContentChanged && wxMessageBox(_("Contents have been changed! Quit anyway?"), _("Warning"), wxICON_QUESTION | wxYES_NO, this) == wxNO)
+            return;
     Close();
 }
 
@@ -181,6 +227,7 @@ MainFrame::OnDeleteRowMBtnSelected(wxCommandEvent &event)
 {
     for(int i: DbfGridView->GetSelectedRows())
         DbfGridView->DeleteRows(i);
+    IsContentChanged = true;
 }
 
 

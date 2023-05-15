@@ -11,7 +11,7 @@
 class MainFrame: public wxFrame
 {
 	public:
-		MainFrame(wxWindow* parent,wxWindowID id=wxID_ANY);
+		MainFrame(wxWindow *parent,wxWindowID id=wxID_ANY);
 		virtual ~MainFrame();
 		Starling_db *dbp;
 
@@ -48,6 +48,8 @@ class MainFrame: public wxFrame
 		static const long ShowDbMetadataMBtnId;
 		static const long HumanNamesMBtnId;
 	private:
+	    void OnCloseWindow(wxCloseEvent &event);
+	    void OnDbfGridViewChanged(wxCommandEvent &event);
 		void OnImportDbfMBtnSelected(wxCommandEvent &event);
 		void OnExportCsvMBtnSelected(wxCommandEvent &event);
 		void OnQuitMBtnSelected(wxCommandEvent &event);
@@ -58,6 +60,8 @@ class MainFrame: public wxFrame
 	    void OnHumanNamesMBtnSelected(wxCommandEvent &event);
 	    void OnShowDbMetadataMBtnSelected(wxCommandEvent &event);
 	    void PopulateTableView();
+
+	    bool IsContentChanged;
 
 		DECLARE_EVENT_TABLE()
 };

@@ -1,6 +1,8 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
 #include <wx/stattext.h>
+#include <wx/translation.h>
+#include <libintl.h>
 
 #include "myna.h"
 #include "MainFrame.h"

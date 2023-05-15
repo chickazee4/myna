@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=myna
+GenericName=Linguistic Database Viewer
+GenericName[ru]=Смотреть базы лингвистических данных
+Icon=myna
+Type=Application
+Categories=Science;Translation;Humanities;Database
+Exec=myna
+Keywords=starling;dbf
