@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.5.3.0">
+	<object class="wxFrame" name="MainFrame">
+		<title>myna</title>
+		<style>wxCAPTION|wxDEFAULT_FRAME_STYLE|wxSYSTEM_MENU|wxRESIZE_BORDER|wxCLOSE_BOX|wxFRAME_SHAPED|wxMAXIMIZE_BOX|wxMINIMIZE_BOX</style>
+		<object class="wxGrid" name="ID_GRID1" variable="DbfGridView" member="yes">
+			<pos>168,176</pos>
+			<style>wxVSCROLL|wxHSCROLL</style>
+		</object>
+		<object class="wxFileDialog" variable="ImportDialog" member="yes">
+			<message>Select database</message>
+			<wildcard>*.dbf</wildcard>
+			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN</style>
+		</object>
+		<object class="wxFileDialog" variable="ExportDialog" member="yes">
+			<message>Export CSV</message>
+			<wildcard>*.csv</wildcard>
+			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
+		</object>
+		<object class="wxMenuBar" variable="MainMenuBar" member="yes">
+			<object class="wxMenu" variable="Menu1" member="yes">
+				<label>File</label>
+				<object class="wxMenuItem" name="ImportDbfMBtnId" variable="ImportDbfMBtn" member="yes">
+					<label>Import .dbf</label>
+					<handler function="OnImportDbfMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ExportCsvMBtnId" variable="ExportCsvMBtn" member="yes">
+					<label>Export .csv</label>
+					<handler function="OnExportCsvMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="QuitMBtnId" variable="QuitMBtn" member="yes">
+					<label>Quit</label>
+					<handler function="OnQuitMBtnSelected" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu2" member="yes">
+				<label>Edit</label>
+				<object class="wxMenuItem" name="DeleteRowBtnId" variable="DeleteRowBtn" member="yes">
+					<label>Delete row</label>
+                    <handler function="OnDeleteRowMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="DeleteColBtnId" variable="DeleteColBtn" member="yes">
+					<label>Delete column</label>
+                    <handler function="OnDeleteColMBtnSelected" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu3" member="yes">
+				<label>View</label>
+				<object class="wxMenuItem" name="ShowDeletedMBtnId" variable="ShowDeletedMBtn" member="yes">
+					<label>Show deleted entries</label>
+					<checked>1</checked>
+					<checkable>1</checkable>
+					<handler function="OnShowDeletedMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ShowIndicesMBtnId" variable="ShowIndicesMBtn" member="yes">
+					<label>Show indices column</label>
+					<checked>1</checked>
+					<checkable>1</checkable>
+					<handler function="OnShowIndicesMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="HumanNamesMBtnId" variable="HumanNamesMBtn" member="yes">
+					<label>Use human-readable column names (if available)</label>
+					<checked>1</checked>
+					<checkable>1</checkable>
+					<handler function="OnHumanNamesMBtnSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ShowDbMetadataMBtnId" variable="ShowDbMetadataMBtn" member="yes">
+					<label>Database metadata...</label>
+					<handler function="OnShowDbMetadataMBtnSelected" entry="EVT_MENU" />
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>
