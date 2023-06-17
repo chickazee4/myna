@@ -35,17 +35,6 @@
 					<handler function="OnQuitMBtnSelected" entry="EVT_MENU" />
 				</object>
 			</object>
-			<object class="wxMenu" variable="Menu2" member="yes">
-				<label>Edit</label>
-				<object class="wxMenuItem" name="DeleteRowBtnId" variable="DeleteRowBtn" member="yes">
-					<label>Delete row</label>
-                    <handler function="OnDeleteRowMBtnSelected" entry="EVT_MENU" />
-				</object>
-				<object class="wxMenuItem" name="DeleteColBtnId" variable="DeleteColBtn" member="yes">
-					<label>Delete column</label>
-                    <handler function="OnDeleteColMBtnSelected" entry="EVT_MENU" />
-				</object>
-			</object>
 			<object class="wxMenu" variable="Menu3" member="yes">
 				<label>View</label>
 				<object class="wxMenuItem" name="ShowDeletedMBtnId" variable="ShowDeletedMBtn" member="yes">

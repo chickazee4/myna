@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 #include <wx/bitmap.h>
 #include <wx/icon.h>
@@ -18,10 +19,6 @@ const long MainFrame::ID_GRID1 = wxNewId();
 const long MainFrame::ImportDbfMBtnId = wxNewId();
 const long MainFrame::ExportCsvMBtnId = wxNewId();
 const long MainFrame::QuitMBtnId = wxNewId();
-const long MainFrame::DeleteRowBtnId = wxNewId();
-const long MainFrame::DeleteColBtnId = wxNewId();
-const long MainFrame::SortAscendingMBtnId = wxNewId();
-const long MainFrame::SortDescendingMBtnId = wxNewId();
 const long MainFrame::ShowDeletedMBtnId = wxNewId();
 const long MainFrame::ShowIndicesMBtnId = wxNewId();
 const long MainFrame::ShowDbMetadataMBtnId = wxNewId();
@@ -60,16 +57,6 @@ MainFrame::MainFrame(wxWindow *parent,wxWindowID id)
 	QuitMBtn = new wxMenuItem(Menu1, QuitMBtnId, _("Quit"), wxEmptyString, wxITEM_NORMAL);
 	Menu1->Append(QuitMBtn);
 	MainMenuBar->Append(Menu1, _("File"));
-	Menu2 = new wxMenu();
-	DeleteRowBtn = new wxMenuItem(Menu2, DeleteRowBtnId, _("Delete row"), wxEmptyString, wxITEM_NORMAL);
-	Menu2->Append(DeleteRowBtn);
-	DeleteColBtn = new wxMenuItem(Menu2, DeleteColBtnId, _("Delete column"), wxEmptyString, wxITEM_NORMAL);
-	Menu2->Append(DeleteColBtn);
-	SortAscendingMBtn = new wxMenuItem(Menu2, SortAscendingMBtnId, _("Sort by this column (ascending)"), wxEmptyString, wxITEM_NORMAL);
-	Menu2->Append(SortAscendingMBtn);
-	SortDescendingMBtn = new wxMenuItem(Menu2, SortDescendingMBtnId, _("Sort by this column (descending)"), wxEmptyString, wxITEM_NORMAL);
-	Menu2->Append(SortDescendingMBtn);
-	MainMenuBar->Append(Menu2, _("Edit"));
 	Menu3 = new wxMenu();
 	ShowDeletedMBtn = new wxMenuItem(Menu3, ShowDeletedMBtnId, _("Show deleted entries"), wxEmptyString, wxITEM_CHECK);
 	Menu3->Append(ShowDeletedMBtn);
@@ -90,8 +77,6 @@ MainFrame::MainFrame(wxWindow *parent,wxWindowID id)
 	Connect(ImportDbfMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnImportDbfMBtnSelected);
     Connect(ExportCsvMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnExportCsvMBtnSelected);
     Connect(QuitMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnQuitMBtnSelected);
-	Connect(DeleteRowBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnDeleteRowMBtnSelected);
-	Connect(DeleteColBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnDeleteColMBtnSelected);
     Connect(ShowDeletedMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnShowDeletedMBtnSelected);
     Connect(ShowIndicesMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnShowIndicesMBtnSelected);
     Connect(HumanNamesMBtnId,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&MainFrame::OnHumanNamesMBtnSelected);
@@ -141,9 +126,14 @@ MainFrame::OnDbfGridViewChanged(wxCommandEvent &event)
 void
 MainFrame::OnImportDbfMBtnSelected(wxCommandEvent &event)
 {
+    if(IsContentChanged && wxMessageBox(_("Contents have been changed! Open anyway?"), _("Warning"), wxICON_QUESTION | wxYES_NO, this) == wxNO){
+            return;
+    }
     if(ImportDialog->ShowModal() == wxID_CANCEL)
         return;
     else {
+        if(dbp) free(dbp);
+
         // Load selected file
         std::string DbfPath;
         if(std::filesystem::exists((std::string)(ImportDialog->GetPath()))){
@@ -154,7 +144,7 @@ MainFrame::OnImportDbfMBtnSelected(wxCommandEvent &event)
         }
         std::string VarPath = ((std::filesystem::path)DbfPath).replace_extension(".var");
         if(!std::filesystem::exists(VarPath)){
-            if(wxMessageBox(_("No .VAR file could not be found automatically. This is not necessarily a problem, but it may cause a crash if the database requires a .var file. Continue anyway?"), _("Warning"), wxICON_QUESTION | wxYES_NO, this) == wxNO)
+            if(wxMessageBox(_("No .VAR file could be found automatically. This is not necessarily a problem, but it may cause a crash if the database requires a .VAR file. Continue anyway?"), _("Warning"), wxICON_QUESTION | wxYES_NO, this) == wxNO)
                 return;
             else VarPath = "";
         }
@@ -196,16 +186,18 @@ MainFrame::OnExportCsvMBtnSelected(wxCommandEvent &event)
         }
         csv << "\n";
         for(int i = 0; i < DbfGridView->GetNumberRows(); i++){
-            if(DbfGridView->GetRowLabelSize() > 0){
-                csv << DbfGridView->GetRowLabelValue(i);
-                csv << CsvDelim;
-            }
-            for(int j = 0; j < DbfGridView->GetNumberCols(); j++){
-                csv << DbfGridView->GetCellValue(i, j);
-                if(j < DbfGridView->GetNumberCols() - 1)
+            if(DbfGridView->GetRowSize(i) != 0){
+                if(DbfGridView->GetRowLabelSize() > 0){
+                    csv << DbfGridView->GetRowLabelValue(i);
                     csv << CsvDelim;
+                }
+                for(int j = 0; j < DbfGridView->GetNumberCols(); j++){
+                    csv << DbfGridView->GetCellValue(i, j);
+                    if(j < DbfGridView->GetNumberCols() - 1)
+                        csv << CsvDelim;
+                }
+                csv << "\n";
             }
-            csv << "\n";
         }
         csv.close();
         IsContentChanged = false;
@@ -223,25 +215,21 @@ MainFrame::OnQuitMBtnSelected(wxCommandEvent &event)
 }
 
 void
-MainFrame::OnDeleteRowMBtnSelected(wxCommandEvent &event)
-{
-    for(int i: DbfGridView->GetSelectedRows())
-        DbfGridView->DeleteRows(i);
-    IsContentChanged = true;
-}
-
-
-void
-MainFrame::OnDeleteColMBtnSelected(wxCommandEvent &event)
-{
-    for(int i: DbfGridView->GetSelectedCols())
-        DbfGridView->DeleteCols(i);
-}
-
-void
 MainFrame::OnShowDeletedMBtnSelected(wxCommandEvent &event)
 {
-    PopulateTableView();
+    if(ShowDeletedMBtn->IsChecked()){
+        auto rowsizes = DbfGridView->GetRowSizes().m_customSizes;
+        for(auto p: rowsizes){
+            DbfGridView->ShowRow(p.first);
+        }
+    } else {
+        if(dbp){
+            for(int i = 0; i < dbp->rec_ct; i++){
+                if(dbp->recs[i].is_deleted)
+                    DbfGridView->HideRow(i);
+            }
+        }
+    }
 }
 
 void
@@ -282,15 +270,22 @@ MainFrame::PopulateTableView()
         // set up rows
         int Ri = 0;
         Starling_sanitize_flags sf = { 1, 1, 1 };
+        char *sout;
         for(int ri = 0; ri < dbp->rec_ct; ri++){
-            if(ShowDeletedMBtn->IsChecked() || !(dbp->recs[ri].is_deleted)){
-                DbfGridViewTable->InsertRows(Ri, 1);
-                DbfGridViewTable->SetRowLabelValue(Ri, starling_sanitize(dbp->recs[ri].entries[0].decoded_content, dbp->recs[ri].entries[0].true_length, &sf)); // usually the index - is it ever not? go check later
-                for(int ei = 1; ei < dbp->hdr_ct; ei++){
-                    DbfGridViewTable->SetValue(Ri, ei - 1, wxString::FromUTF8(starling_sanitize(dbp->recs[ri].entries[ei].decoded_content, dbp->recs[ri].entries[ei].true_length, &sf)));
-                }
-                Ri++;
+            DbfGridViewTable->InsertRows(Ri, 1);
+            if(starling_sanitize(&sout, dbp->recs[ri].entries[0].decoded_content, dbp->recs[ri].entries[0].true_length, &sf) == STARLING_OK){
+                DbfGridViewTable->SetRowLabelValue(Ri, sout); // usually the index - is it ever not? check later
+                free(sout);
             }
+            for(int ei = 1; ei < dbp->hdr_ct; ei++){
+                if(starling_sanitize(&sout, dbp->recs[ri].entries[ei].decoded_content, dbp->recs[ri].entries[ei].true_length, &sf) == STARLING_OK){
+                    DbfGridViewTable->SetValue(Ri, ei - 1, sout);
+                    free(sout);
+                }
+            }
+            Ri++;
+            if(!(ShowDeletedMBtn->IsChecked()) && dbp->recs[ri].is_deleted)
+                DbfGridView->HideRow(Ri);
         }
     }
 }

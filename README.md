@@ -39,8 +39,8 @@ Since myna's interface is currently so basic, most aspects should be fairly self
   - Export .csv — Will display a file chooser dialog with which you can choose a location to save a .csv file corresponding to the database. When saved, the contents of the table view **as shown** (changes made to the view since loading will be reflected!) will be saved to a **comma-delimited** UTF-8 .csv file.
   - Quit — Quit the program. If the data has been modified, a prompt will be shown to confirm close.
 * Edit
-  - Delete row — Deletes a selected row. You need to click on the row number to select the whole row in order to delete it due to certain limitations of wxWidgets (you can't select just a single cell).
-  - Delete column — Same, but for a column.
+  - Delete row/column — Deletes a selected row/column. You need to click on the row/column number to select the whole row/column in order to delete it due to certain limitations of wxWidgets (you can't select just a single cell).
+  - Insert row/column — Adds a row/column at the bottom/right of the table respectively.
   - Sort ascending/descending — Currently does nothing (functionality will be added in the future)
 * View
   - Show deleted entries — Sometimes, Starling rows have a flag indicating that they are "deleted" and should not be shown. If this is checked, they will be shown anyway. Whether these entries are included in exported csvs depends on whether this is checked.

@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: myna-0.2\n"
+"POT-Creation-Date: 2023-06-16 19:19-0600\n"
+"PO-Revision-Date: 2023-06-16 19:20-0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Poedit-Basepath: ../../src\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: MainFrame.cpp:35
+msgid "myna"
+msgstr "майна"
+
+#: MainFrame.cpp:48
+msgid "Select database"
+msgstr "Открыть базу данных"
+
+#: MainFrame.cpp:48
+msgid "*.dbf"
+msgstr "*.dbf"
+
+#: MainFrame.cpp:49
+msgid "Export CSV"
+msgstr "Сохранить в формате CSV"
+
+#: MainFrame.cpp:49
+msgid "*.csv"
+msgstr "*.csv"
+
+#: MainFrame.cpp:52
+msgid "Import .dbf"
+msgstr "Открыть файл .dbf"
+
+#: MainFrame.cpp:54
+msgid "Export .csv"
+msgstr "Сохранить в формате .csv"
+
+#: MainFrame.cpp:57
+msgid "Quit"
+msgstr "Выход"
+
+#: MainFrame.cpp:59
+msgid "File"
+msgstr "Файл"
+
+#: MainFrame.cpp:61
+msgid "Show deleted entries"
+msgstr "Показать удаленные записи"
+
+#: MainFrame.cpp:64
+msgid "Show indices column"
+msgstr "Показать колонку индекса"
+
+#: MainFrame.cpp:67
+msgid "Use human-readable column names (if available)"
+msgstr "Показать колонки с названиями, которые люди умеют читать"
+
+#: MainFrame.cpp:70
+msgid "Database metadata..."
+msgstr "Метаданные базы данных..."
+
+#: MainFrame.cpp:72
+msgid "View"
+msgstr "Вид"
+
+#: MainFrame.cpp:110 MainFrame.cpp:212
+msgid "Contents have been changed! Quit anyway?"
+msgstr "Таблица изменена! Сохранить изменения?"
+
+#: MainFrame.cpp:110 MainFrame.cpp:129 MainFrame.cpp:147 MainFrame.cpp:212
+msgid "Warning"
+msgstr "Внимание"
+
+#: MainFrame.cpp:129
+msgid "Contents have been changed! Open anyway?"
+msgstr "Таблица изменена! Все же хочется открыть другую таблицу?"
+
+#: MainFrame.cpp:147
+msgid ""
+"No .VAR file could be found automatically. This is not necessarily a "
+"problem, but it may cause a crash if the database requires a .VAR file. "
+"Continue anyway?"
+msgstr ""
+"Не удалось найти файл .VAR по умолчанию. Это само по себе не считается "
+"ошибкой, но ошибки наверно возникнут, если база данных требует файла .VAR. "
+"Все же хочется продолжать?"
+
+#: MetadataDialog.cpp:57
+msgid "myna - database metadata"
+msgstr "майна - метаданные базы данных"
+
+#: MetadataDialog.cpp:68
+msgid "Date last modified:"
+msgstr "Дата последних изменений:"
+
+#: MetadataDialog.cpp:72
+msgid "Description:"
+msgstr "Описание:"
+
+#: MetadataDialog.cpp:76
+msgid "Number of records:"
+msgstr "Количество записей:"
+
+#: MetadataDialog.cpp:80
+msgid "Number of fields"
+msgstr "Количество полей"
+
+#: MetadataDialog.cpp:84
+msgid "Fields:"
+msgstr "Поля:"
+
+#: MetadataDialog.cpp:93
+msgid "Internal name"
+msgstr "Внутренное название"
+
+#: MetadataDialog.cpp:94
+msgid "Human name"
+msgstr "Название для людей"
+
+#: MetadataDialog.cpp:95
+msgid "Data type"
+msgstr "Тип данных"

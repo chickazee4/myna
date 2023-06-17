@@ -23,8 +23,6 @@ class MainFrame: public wxFrame
 		wxMenu * Menu2;
 		wxMenu * Menu3;
 		wxMenuBar * MainMenuBar;
-		wxMenuItem * DeleteColBtn;
-		wxMenuItem * DeleteRowBtn;
 		wxMenuItem * ExportCsvMBtn;
 		wxMenuItem * ImportDbfMBtn;
 		wxMenuItem * QuitMBtn;
@@ -32,17 +30,11 @@ class MainFrame: public wxFrame
 		wxMenuItem * ShowDeletedMBtn;
 		wxMenuItem * ShowIndicesMBtn;
 		wxMenuItem * HumanNamesMBtn;
-		wxMenuItem * SortAscendingMBtn;
-		wxMenuItem * SortDescendingMBtn;
 	protected:
 		static const long ID_GRID1;
 		static const long ImportDbfMBtnId;
 		static const long ExportCsvMBtnId;
 		static const long QuitMBtnId;
-		static const long DeleteRowBtnId;
-		static const long DeleteColBtnId;
-		static const long SortAscendingMBtnId;
-		static const long SortDescendingMBtnId;
 		static const long ShowDeletedMBtnId;
 		static const long ShowIndicesMBtnId;
 		static const long ShowDbMetadataMBtnId;
@@ -53,8 +45,6 @@ class MainFrame: public wxFrame
 		void OnImportDbfMBtnSelected(wxCommandEvent &event);
 		void OnExportCsvMBtnSelected(wxCommandEvent &event);
 		void OnQuitMBtnSelected(wxCommandEvent &event);
-		void OnDeleteRowMBtnSelected(wxCommandEvent &event);
-		void OnDeleteColMBtnSelected(wxCommandEvent &event);
 		void OnShowDeletedMBtnSelected(wxCommandEvent &event);
 	    void OnShowIndicesMBtnSelected(wxCommandEvent &event);
 	    void OnHumanNamesMBtnSelected(wxCommandEvent &event);
