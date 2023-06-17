@@ -18,7 +18,7 @@ Build-time prerequisites (on Linux):
 
 * [wxWidgets](https://www.wxwidgets.org) (version >= 3.0)
 
-* [libstarling](https://github.com/chickazee4/starling) (version >= 0.1.2; optional — the build system can obtain & link statically)
+* [libstarling](https://github.com/chickazee4/starling) (version >= 0.3.0; optional — the build system can obtain & link statically)
 
 myna uses a CMake-based build system, so it can be obtained and built as follows:
 
